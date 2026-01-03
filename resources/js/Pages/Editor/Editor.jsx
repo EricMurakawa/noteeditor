@@ -5,7 +5,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { HeadingNode } from '@lexical/rich-text'
 import { ListNode, ListItemNode } from '@lexical/list'
-import Toolbar from './Componentes/Toolbar/Toolbar'
+import Toolbar from './Plugins/Toolbar/Toolbar'
 import clsx from 'clsx'
 
 export default function Editor({ initialState, onChange }) {
