@@ -7,6 +7,7 @@ import { HeadingNode } from '@lexical/rich-text'
 import { ListNode, ListItemNode } from '@lexical/list'
 import Toolbar from './Plugins/Toolbar/Toolbar'
 import clsx from 'clsx'
+import ImageNode from './Nodes/ImageNode'
 
 export default function Editor({ initialState, onChange }) {
   const theme = {
@@ -49,7 +50,12 @@ export default function Editor({ initialState, onChange }) {
     onError(error) {
       console.error(error)
     },
-    nodes: [HeadingNode, ListNode, ListItemNode],
+    nodes: [
+      HeadingNode,
+      ListNode,
+      ListItemNode,
+      ImageNode,
+    ],
     editorState: initialState,
   }
 

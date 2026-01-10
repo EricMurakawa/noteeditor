@@ -37,6 +37,7 @@ import {
 import ThemeToggle from '@/Components/ThemeToggle';
 import ToolbarButton from './ToolbarButton';
 import ToolbarDivider from './ToolbarDivider';
+import ImagePlugin from '../ImagePlugin/ImagePlugin';
 
 export default function Toolbar() {
   const [editor] = useLexicalComposerContext();
@@ -50,6 +51,7 @@ export default function Toolbar() {
 
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
+
     if ($isRangeSelection(selection)) {
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
@@ -183,6 +185,8 @@ export default function Toolbar() {
       >
         <MdFormatAlignJustify size={20} />
       </ToolbarButton>
+
+      <ImagePlugin />
     </div>
   );
 }
