@@ -67,7 +67,7 @@ export default function Editor({ initialState, onChange }) {
 
   return (
     <div className={clsx(
-      'relative min-h-[100dvh] h-[100dvh] bg-white text-zinc-900',
+      'editor relative min-h-[100dvh] h-full h-[100dvh] bg-white text-zinc-900',
       'dark:bg-zinc-900 dark:text-zinc-100',
     )}>
       <LexicalComposer initialConfig={config}>
@@ -75,7 +75,7 @@ export default function Editor({ initialState, onChange }) {
         <RichTextPlugin
           contentEditable={
             <ContentEditable className={clsx(
-              'relative min-h-full w-full max-w-[680px] mx-auto px-8 pt-[60px] pb-[120px] outline-none text-base leading-[1.6] text-zinc-900',
+              'relative min-h-full w-full max-w-[680px] mx-auto px-8 py-[120px] outline-none text-base leading-[1.6] text-zinc-900',
               'dark:text-zinc-100',
             )} />
           }
