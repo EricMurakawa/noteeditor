@@ -26,7 +26,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-zinc-700"
+      className="p-2 rounded-lg cursor-pointer hover:bg-blue-100 dark:hover:bg-zinc-700"
     >
       {dark ? <IoSunny size={20} /> : <WiMoonAltWaxingCrescent1 size={20} />}
     </button>
