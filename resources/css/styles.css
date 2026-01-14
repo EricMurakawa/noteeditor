@@ -1,4 +1,42 @@
 /* Lexical nodes */
+.editor-heading-h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 1.5rem 0 1rem;
+}
+
+.editor-heading-h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.editor-heading-h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1rem 0 0.5rem;
+}
+
+.editor-heading-h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.editor-heading-h5 {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.editor-heading-h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
 .editor-text-bold {
   font-weight: bold;
 }

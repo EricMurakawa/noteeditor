@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 export const DropdownContext = createContext(null)
@@ -44,10 +45,12 @@ export function DropdownMenu({ children }) {
 
   if (!open) return null
 
-  const alignment = align === 'right' ? 'right-0' : 'left-0'
-
   return (
-    <div className={`absolute mt-2 w-44 rounded-md bg-white shadow ${alignment}`}>
+    <div className={clsx(
+      'absolute mt-2 w-44 rounded-md bg-white shadow',
+      'dark:bg-zinc-700',
+      align === 'right' ? 'right-0' : 'left-0'
+    )}>
       <ul className="py-1">{children}</ul>
     </div>
   )

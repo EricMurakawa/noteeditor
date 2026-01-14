@@ -1,25 +1,14 @@
+import { useRef } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { mergeRegister } from '@lexical/utils';
+import clsx from 'clsx';
+import { RiH1 } from 'react-icons/ri';
 
 import {
-  $getSelection,
-  $isRangeSelection,
-  CAN_REDO_COMMAND,
-  CAN_UNDO_COMMAND,
-  COMMAND_PRIORITY_LOW,
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
-  SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
 
 import {
   MdFormatAlignCenter,
@@ -34,69 +23,35 @@ import {
   MdUndo
 } from 'react-icons/md';
 
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem
+} from '@/Components/UI/Dropdown'
+
 import ThemeToggle from '@/Components/ThemeToggle';
 import ToolbarButton from './ToolbarButton';
 import ToolbarDivider from './ToolbarDivider';
 import ImagePlugin from '../ImagePlugin/ImagePlugin';
-import clsx from 'clsx';
+import { useToolbar } from '../../Hooks/useToolbar';
 
 export default function Toolbar() {
   const [editor] = useLexicalComposerContext();
   const toolbarRef = useRef(null);
-  const [canUndo, setCanUndo] = useState(false);
-  const [canRedo, setCanRedo] = useState(false);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
 
-  const $updateToolbar = useCallback(() => {
-    const selection = $getSelection();
-
-    if ($isRangeSelection(selection)) {
-      setIsBold(selection.hasFormat('bold'));
-      setIsItalic(selection.hasFormat('italic'));
-      setIsUnderline(selection.hasFormat('underline'));
-      setIsStrikethrough(selection.hasFormat('strikethrough'));
-    }
-  }, []);
-
-  useEffect(() => {
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(
-          () => {
-            $updateToolbar();
-          },
-          { editor },
-        );
-      }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        (_payload, _newEditor) => {
-          $updateToolbar();
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        CAN_UNDO_COMMAND,
-        (payload) => {
-          setCanUndo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        CAN_REDO_COMMAND,
-        (payload) => {
-          setCanRedo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-    );
-  }, [editor, $updateToolbar]);
+  const {
+    canUndo,
+    canRedo,
+    isBold,
+    isItalic,
+    isUnderline,
+    isStrikethrough,
+    blockType,
+    formatHeading,
+    formatParagraph,
+    HEADINGS,
+  } = useToolbar();
 
   return (
     <div
@@ -127,6 +82,31 @@ export default function Toolbar() {
       </ToolbarButton>
 
       <ToolbarDivider />
+
+      <Dropdown align="right">
+        <DropdownTrigger>
+          <RiH1 size={16}/>
+        </DropdownTrigger>
+
+        <DropdownMenu>
+          {HEADINGS.map((heading) => (
+            <DropdownItem
+              key={heading}
+              active={blockType === heading}
+              onClick={() => formatHeading(heading)}
+            >
+              { heading.toLocaleUpperCase() }
+            </DropdownItem>
+          ))}
+
+          <DropdownItem
+            active={blockType === 'paragraph'}
+            onClick={formatParagraph}
+          >
+            Texto Normal (P)
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
 
       <ToolbarButton
         active={isBold}
@@ -189,6 +169,8 @@ export default function Toolbar() {
       >
         <MdFormatAlignJustify size={20} />
       </ToolbarButton>
+
+      <ToolbarDivider />
 
       <ImagePlugin />
     </div>
