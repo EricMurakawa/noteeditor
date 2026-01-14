@@ -22,6 +22,7 @@ export default function ImagePlugin() {
       })
     }
 
+    e.target.value = ''
     reader.readAsDataURL(file)
   }
 
