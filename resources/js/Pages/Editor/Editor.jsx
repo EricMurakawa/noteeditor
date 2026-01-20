@@ -9,7 +9,7 @@ import Toolbar from './Plugins/Toolbar/Toolbar'
 import clsx from 'clsx'
 import ImageNode from './Nodes/ImageNode'
 
-export default function Editor({ initialState, onChange }) {
+export default function Editor({ note, onChange }) {
   const theme = {
     code: 'editor-code',
     heading: {
@@ -56,7 +56,7 @@ export default function Editor({ initialState, onChange }) {
       ListItemNode,
       ImageNode,
     ],
-    editorState: initialState,
+    editorState: note && note.content ? note.content : null,
   }
 
   function handleChange(editorState) {

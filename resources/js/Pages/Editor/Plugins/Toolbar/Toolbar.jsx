@@ -35,6 +35,7 @@ import ToolbarButton from './ToolbarButton';
 import ToolbarDivider from './ToolbarDivider';
 import ImagePlugin from '../ImagePlugin/ImagePlugin';
 import { useToolbar } from '../../Hooks/useToolbar';
+import ToolbarButtonSave from './ToolbarButtonSave';
 
 export default function Toolbar() {
   const [editor] = useLexicalComposerContext();
@@ -61,6 +62,8 @@ export default function Toolbar() {
       )}
       ref={toolbarRef}
     >
+      <ToolbarButtonSave />
+
       <ThemeToggle />
 
       <ToolbarDivider />

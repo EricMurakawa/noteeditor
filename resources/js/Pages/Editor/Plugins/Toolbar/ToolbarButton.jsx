@@ -6,6 +6,7 @@ export default function ToolbarButton({
   disabled = false,
   onClick,
   ariaLabel,
+  style,
 }) {
   return (
     <button
@@ -19,6 +20,7 @@ export default function ToolbarButton({
         active && 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
         disabled && 'opacity-40',
         !disabled && 'cursor-pointer',
+        style,
       )}
     >
       {children}
