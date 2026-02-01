@@ -7,20 +7,25 @@ use Illuminate\Support\Facades\Storage;
 
 class NoteContentService
 {
+    private $content;
+
     public function __construct(
         private Note $note
-    ) {}
+    ) {
+        $this->content = $note->content;
+    }
 
     public function process(): array
     {
-        return $this->replaceImage();
+        $this->replaceImage();
+        $this->deleteOldImages();
+
+        return $this->content;
     }
 
-    private function replaceImage(): array
+    private function replaceImage(): void
     {
-        $content = $this->note->content;
-
-        array_walk_recursive($content, function (&$value) {
+        array_walk_recursive($this->content, function (&$value) {
 
             if (is_string($value) && str_starts_with($value, 'data:image/')) {
 
@@ -37,7 +42,28 @@ class NoteContentService
                 $value = Storage::url($fileName);
             }
         });
+    }
 
-        return $content;
+    private function deleteOldImages(): void
+    {
+        $notePath = "notes/{$this->note->id}";
+
+        $usedImages = [];
+
+        array_walk_recursive($this->content, function ($value) use (&$usedImages, $notePath) {
+            if (!is_string($value)) return;
+
+            $path = ltrim(parse_url($value, PHP_URL_PATH) ?? '', '/');
+            $path = str_replace('storage/', '', $path);
+
+            if (str_starts_with($path, $notePath)) {
+                $usedImages[] = $path;
+            }
+        });
+
+        $storedImages = Storage::disk('public')->files($notePath);
+        $imagesToDelete = array_diff($storedImages, $usedImages);
+
+        Storage::disk('public')->delete($imagesToDelete);
     }
 }
