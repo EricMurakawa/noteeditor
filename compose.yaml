@@ -22,6 +22,23 @@ services:
       - 8.8.8.8
       - 8.8.4.4
 
+  # queue worker
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: noteeditor-queue
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - db
+      - redis
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    networks:
+      - laravel
+
   # nginx
   nginx:
     image: nginx:alpine
