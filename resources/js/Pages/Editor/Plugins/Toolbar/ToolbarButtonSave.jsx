@@ -40,7 +40,7 @@ export default function ToolbarButtonSave({ style }) {
   }, [editor])
 
   const handleSave = async () => {
-    const editorState = JSON.stringify(editor.getEditorState().toJSON())
+    const editorState = editor.getEditorState().toJSON()
 
     if (editorState === lastContentRef.current) {
       return

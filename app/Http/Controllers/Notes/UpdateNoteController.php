@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Notes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NoteUpdateRequest;
+use App\Jobs\NoteContentProcessJob;
 use App\Models\Note;
+use Illuminate\Support\Facades\DB;
 
 class UpdateNoteController extends Controller
 {
@@ -13,8 +15,17 @@ class UpdateNoteController extends Controller
      */
     public function __invoke(NoteUpdateRequest $request, Note $note)
     {
-        $note->update($request->validated());
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['message' => 'Nota salva com sucesso!']);
+            $note->update($request->validated());
+            NoteContentProcessJob::dispatch($note);
+
+            DB::commit();
+            return response()->json(['message' => 'Nota salva com sucesso!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

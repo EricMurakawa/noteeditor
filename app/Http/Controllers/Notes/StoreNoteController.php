@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Notes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NoteStoreRequest;
+use App\Jobs\NoteContentProcessJob;
 use App\Models\Note;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class StoreNoteController extends Controller
 {
@@ -13,13 +16,17 @@ class StoreNoteController extends Controller
      */
     public function __invoke(NoteStoreRequest $request)
     {
-        $validated = $request->validated();
+        try {
+            DB::beginTransaction();
 
-        $note = Note::create([
-            'title'   => data_get($validated, 'title'),
-            'content' => data_get($validated, 'content'),
-        ]);
+            $note = Note::create($request->validated());
+            NoteContentProcessJob::dispatch($note);
 
-        return response()->json($note, 201);
+            DB::commit();
+            return response()->json($note, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

@@ -23,7 +23,7 @@ class NoteUpdateRequest extends FormRequest
     {
         return [
             'title'   => ['nullable', 'string', 'max:255'],
-            'content' => ['required', 'json'],
+            'content' => ['required', 'array'],
         ];
     }
 }

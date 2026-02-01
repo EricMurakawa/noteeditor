@@ -56,7 +56,7 @@ export default function Editor({ note, onChange }) {
       ListItemNode,
       ImageNode,
     ],
-    editorState: note && note.content ? note.content : null,
+    editorState: note && note.content ? JSON.stringify(note.content) : null,
   }
 
   function handleChange(editorState) {
