@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Notes;
+namespace App\Http\Controllers\Note;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NoteStoreRequest;
@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class StoreNoteController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     public function __invoke(NoteStoreRequest $request)
     {
         try {
