@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Notes\ShowNoteController;
+use App\Http\Controllers\Note\ShowNoteController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

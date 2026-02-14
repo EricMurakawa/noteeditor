@@ -8,8 +8,12 @@ import { ListNode, ListItemNode } from '@lexical/list'
 import Toolbar from './Plugins/Toolbar/Toolbar'
 import clsx from 'clsx'
 import ImageNode from './Nodes/ImageNode'
+import Sidebar from './Components/Sidebar'
+import { useState } from 'react'
 
 export default function Editor({ note, onChange }) {
+  const [collapsed, setCollapsed] = useState(false)
+
   const theme = {
     code: 'editor-code',
     heading: {
@@ -66,23 +70,47 @@ export default function Editor({ note, onChange }) {
   }
 
   return (
-    <div className={clsx(
-      'editor relative min-h-[100dvh] h-full h-[100dvh] bg-white text-zinc-900',
-      'dark:bg-zinc-900 dark:text-zinc-100',
-    )}>
-      <LexicalComposer initialConfig={config}>
-        <Toolbar />
-        <RichTextPlugin
-          contentEditable={
-            <ContentEditable className={clsx(
-              'relative min-h-full w-full max-w-[680px] mx-auto px-8 py-[120px] outline-none text-base leading-[1.6] text-zinc-900',
-              'dark:text-zinc-100',
-            )} />
-          }
-        />
-        <HistoryPlugin />
-        <OnChangePlugin onChange={handleChange} />
-      </LexicalComposer>
+    <div
+      className={clsx(
+        'relative min-h-[100dvh] w-full bg-white text-zinc-900',
+        'dark:bg-zinc-900 dark:text-zinc-100',
+      )}
+    >
+      <div className='flex min-h-[100dvh]'>
+        {/* Sidebar */}
+        <Sidebar onCollapseChange={(isCollapsed) => setCollapsed(isCollapsed)}/>
+
+        {/* Main */}
+        <main
+          className={clsx(
+            'flex-1 transition-all duration-300 ease-in-out',
+            collapsed ? 'ml-16' : 'ml-64',
+          )}
+        >
+          <div className={clsx(
+            'editor relative min-h-[100dvh] h-full',
+            'transition-all duration-300 ease-in-out',
+          )}>
+            <LexicalComposer initialConfig={config}>
+              <Toolbar />
+
+              <RichTextPlugin
+                contentEditable={
+                  <ContentEditable
+                    className={clsx(
+                      'relative min-h-full w-full max-w-[680px] mx-auto px-8 py-[120px]',
+                      'outline-none text-base leading-[1.6]',
+                    )}
+                  />
+                }
+              />
+
+              <HistoryPlugin />
+              <OnChangePlugin onChange={handleChange} />
+            </LexicalComposer>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

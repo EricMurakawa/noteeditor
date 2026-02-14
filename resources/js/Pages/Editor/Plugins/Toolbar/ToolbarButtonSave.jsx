@@ -4,12 +4,14 @@ import ToolbarButton from './ToolbarButton'
 import { VscSave } from 'react-icons/vsc'
 import { COMMAND_PRIORITY_LOW, KEY_DOWN_COMMAND } from 'lexical'
 import { router, usePage } from '@inertiajs/react'
+import { useNotes } from '@/Contexts/NoteContext'
 
 export default function ToolbarButtonSave({ style }) {
   const [editor] = useLexicalComposerContext()
   const [isChanged, setIsChanged] = useState(false)
   const lastContentRef = useRef(JSON.stringify(editor.getEditorState().toJSON()))
   const { note } = usePage().props;
+  const { addNote, updateNote } = useNotes()
 
   useEffect(() => {
     // Salva com ctrl + s
@@ -48,16 +50,19 @@ export default function ToolbarButtonSave({ style }) {
 
     try {
       if (note) {
-        await axios.put(`api/notes/${note.id}`, {
+        const { data } = await axios.put(`api/notes/${note.id}`, {
           content: editorState
         });
+
+        updateNote(data)
       } else {
         const {data} = await axios.post(`/api/notes`, {
           content: editorState
         })
 
         if (data?.id) {
-          router.visit(`${data.id}`)
+          addNote(data)
+          router.visit(data.id)
         }
       }
 

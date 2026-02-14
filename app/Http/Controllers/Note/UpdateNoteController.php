@@ -19,7 +19,7 @@ class UpdateNoteController extends Controller
             NoteContentProcessJob::dispatch($note);
 
             DB::commit();
-            return response()->json(['message' => 'Nota salva com sucesso!']);
+            return response()->json($note);
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;

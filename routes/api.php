@@ -1,8 +1,12 @@
 <?php
 
-use App\Http\Controllers\Notes\StoreNoteController;
-use App\Http\Controllers\Notes\UpdateNoteController;
+use App\Http\Controllers\Note\ListNoteController;
+use App\Http\Controllers\Note\StoreNoteController;
+use App\Http\Controllers\Note\UpdateNoteController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/notes', StoreNoteController::class);
-Route::put('/notes/{note}', UpdateNoteController::class);
+Route::prefix('/notes')->group(function() {
+    Route::get('/', ListNoteController::class);
+    Route::post('/', StoreNoteController::class);
+    Route::put('/{note}', UpdateNoteController::class);
+});

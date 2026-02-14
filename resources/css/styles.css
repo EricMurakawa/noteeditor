@@ -56,3 +56,19 @@
 .editor-text-underlineStrikethrough {
   text-decoration: underline line-through;
 }
+
+/* LoadingBar */
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+    width: 30%;
+  }
+  50% {
+    transform: translateX(50%);
+    width: 50%;
+  }
+  100% {
+    transform: translateX(130%);
+    width: 100%;
+  }
+}
