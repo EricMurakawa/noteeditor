@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { FiEdit } from 'react-icons/fi'
 import { LuNotebookText } from 'react-icons/lu'
 import { RiArrowLeftRightFill } from 'react-icons/ri'
+import { usePage } from '@inertiajs/react'
 
 export default function Sidebar({onCollapseChange}) {
   const {
@@ -16,6 +17,7 @@ export default function Sidebar({onCollapseChange}) {
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [collapsed, setCollapsed] = useState(!isDesktop)
+  const { url } = usePage()
 
   useEffect(() => {
     setCollapsed(!isDesktop)
@@ -63,6 +65,7 @@ export default function Sidebar({onCollapseChange}) {
               label={note.title}
               collapsed={collapsed}
               icon={<LuNotebookText />}
+              active={url === `/${note.id}`}
             />
           ))}
         </nav>
