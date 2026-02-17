@@ -1,13 +1,14 @@
+import { Link } from '@inertiajs/react';
 import clsx from 'clsx';
 
-export default function SidebarItem({ label, collapsed, onSelect, icon }) {
+export default function SidebarItem({ link, label, collapsed, icon }) {
   return (
-    <button
+    <Link
+      href={link}
       className={clsx(
         'flex items-center gap-3 rounded-md px-3 py-2 text-sm',
         'hover:bg-zinc-200 dark:hover:bg-zinc-800',
       )}
-      onClick={() => onSelect()}
     >
       <span className='text-base'>{ icon }</span>
       {/* { !collapsed && <span>{label || 'Sem título'}</span> } */}
@@ -19,6 +20,6 @@ export default function SidebarItem({ label, collapsed, onSelect, icon }) {
       >
         {label || 'Sem título'}
       </span>
-    </button>
+    </Link>
   )
 }

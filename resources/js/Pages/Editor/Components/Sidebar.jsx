@@ -4,7 +4,6 @@ import SidebarItem from './SidebarItem'
 import clsx from 'clsx'
 import { useNotes } from '@/Contexts/NoteContext'
 import LoadingBar from '@/Components/UI/LoadingBar'
-import { router } from '@inertiajs/react'
 import { FiEdit } from 'react-icons/fi'
 import { LuNotebookText } from 'react-icons/lu'
 import { RiArrowLeftRightFill } from 'react-icons/ri'
@@ -12,17 +11,11 @@ import { RiArrowLeftRightFill } from 'react-icons/ri'
 export default function Sidebar({onCollapseChange}) {
   const {
     notes,
-    setNotes,
     loadingNotes,
-    setLoadingNotes
   } = useNotes()
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [collapsed, setCollapsed] = useState(!isDesktop)
-
-  useEffect(() => {
-    getItems(0)
-  }, []);
 
   useEffect(() => {
     setCollapsed(!isDesktop)
@@ -31,26 +24,6 @@ export default function Sidebar({onCollapseChange}) {
   useEffect(() => {
     onCollapseChange(collapsed)
   }, [collapsed, onCollapseChange])
-
-  const getItems = async (offset) => {
-    try {
-      setLoadingNotes(true)
-
-      const params = {
-        select: ['id', 'title', 'updated_at']
-      }
-
-      const { data } = await axios.get(`api/notes`, { params });
-
-      setNotes(data)
-    } finally {
-      setLoadingNotes(false)
-    }
-  }
-
-  const handleSelect = (id) => {
-    router.visit(id)
-  }
 
   return (
     <aside
@@ -74,10 +47,10 @@ export default function Sidebar({onCollapseChange}) {
           <RiArrowLeftRightFill />
         </button>
         <SidebarItem
+          link={'/'}
           label='Nova nota'
           collapsed={collapsed}
           icon={<FiEdit size={18} />}
-          onSelect={() => router.visit('/')}
         />
 
         {/* Menu */}
@@ -86,10 +59,10 @@ export default function Sidebar({onCollapseChange}) {
           {notes.map(note => (
             <SidebarItem
               key={note.id}
+              link={`/${note.id}`}
               label={note.title}
               collapsed={collapsed}
               icon={<LuNotebookText />}
-              onSelect={() => handleSelect(note.id)}
             />
           ))}
         </nav>

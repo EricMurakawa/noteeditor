@@ -1,10 +1,28 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 const NoteContext = createContext()
 
 export function NoteProvider({ children }) {
   const [notes, setNotes] = useState([])
   const [loadingNotes, setLoadingNotes] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
+  async function loadNotes() {
+    if (loaded) return
+
+    try {
+      setLoadingNotes(true)
+
+      const { data } = await axios.get('/api/notes', {
+        params: { select: ['id', 'title', 'updated_at'] }
+      })
+
+      setNotes(data)
+      setLoaded(true)
+    } finally {
+      setLoadingNotes(false)
+    }
+  }
 
   function addNote(note) {
     setNotes(prev => [note, ...prev])
@@ -29,6 +47,10 @@ export function NoteProvider({ children }) {
       )
     );
   }
+
+  useEffect(() => {
+    loadNotes()
+  }, [])
 
   return (
     <NoteContext.Provider
