@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react'
+import { router, usePage } from '@inertiajs/react'
+import clsx from 'clsx'
 import { useMediaQuery } from '@/Hooks/useMediaQuery'
 import { useNotes } from '@/Contexts/NoteContext'
 import LoadingBar from '@/Components/UI/LoadingBar'
 import SidebarItem from './SidebarItem'
-import clsx from 'clsx'
 import { FiEdit } from 'react-icons/fi'
 import { LuNotebookText } from 'react-icons/lu'
 import { RiArrowLeftRightFill } from 'react-icons/ri'
-import { usePage } from '@inertiajs/react'
+import { AiTwotoneDelete } from 'react-icons/ai'
 
 export default function Sidebar({onCollapseChange}) {
   const {
     notes,
     loadingNotes,
+    removeNote,
   } = useNotes()
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [collapsed, setCollapsed] = useState(!isDesktop)
-  const { url } = usePage()
+  const { url, props } = usePage()
 
   useEffect(() => {
     setCollapsed(!isDesktop)
@@ -26,6 +28,20 @@ export default function Sidebar({onCollapseChange}) {
   useEffect(() => {
     onCollapseChange(collapsed)
   }, [collapsed, onCollapseChange])
+
+  function handleDelete(e, note) {
+    if (! confirm(`Tem certeza que quer deletar ${note.title}`)) {
+      return
+    }
+
+    e.preventDefault()
+    e.stopPropagation()
+    removeNote(note.id)
+
+    if (props?.note?.id === note.id) {
+      router.visit('/')
+    }
+  }
 
   return (
     <aside
@@ -56,19 +72,31 @@ export default function Sidebar({onCollapseChange}) {
         />
 
         {/* Menu */}
-        <h2>Notas</h2>
-        <nav className='flex flex-col gap-1'>
-          {notes.map(note => (
-            <SidebarItem
-              key={note.id}
-              link={`/${note.id}`}
-              label={note.title}
-              collapsed={collapsed}
-              icon={<LuNotebookText />}
-              active={url === `/${note.id}`}
-            />
-          ))}
-        </nav>
+        {notes.length > 0 && (
+          <>
+            <h2>Notas</h2>
+            <nav className='flex flex-col gap-1'>
+              {notes.map(note => (
+                <SidebarItem
+                  key={note.id}
+                  link={`/${note.id}`}
+                  label={note.title}
+                  collapsed={collapsed}
+                  icon={<LuNotebookText />}
+                  active={url === `/${note.id}`}
+                  rightAction={
+                    <button
+                      onClick={(e) => {handleDelete(e, note)}}
+                      className="opacity-60 hover:opacity-100 cursor-pointer"
+                    >
+                      <AiTwotoneDelete />
+                    </button>
+                  }
+                />
+              ))}
+            </nav>
+          </>
+        )}
 
         {!collapsed && (
           <div className='mt-auto px-2 text-xs text-zinc-400'>

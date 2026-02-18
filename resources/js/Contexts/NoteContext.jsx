@@ -28,8 +28,16 @@ export function NoteProvider({ children }) {
     setNotes(prev => [note, ...prev])
   }
 
-  function removeNote(id) {
-    setNotes(prev => prev.filter(n => n.id !== id))
+  async function removeNote(id) {
+    try {
+      setLoadingNotes(true)
+
+      await axios.delete(`/api/notes/${id}`)
+
+      setNotes(prev => prev.filter(n => n.id !== id))
+    } finally {
+      setLoadingNotes(false)
+    }
   }
 
   function updateNote(updated) {

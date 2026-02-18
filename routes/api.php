@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Note\DeleteNoteController;
 use App\Http\Controllers\Note\ListNoteController;
 use App\Http\Controllers\Note\StoreNoteController;
 use App\Http\Controllers\Note\UpdateNoteController;
@@ -9,4 +10,5 @@ Route::prefix('/notes')->group(function() {
     Route::get('/', ListNoteController::class);
     Route::post('/', StoreNoteController::class);
     Route::put('/{note}', UpdateNoteController::class);
+    Route::delete('/{note}', DeleteNoteController::class);
 });

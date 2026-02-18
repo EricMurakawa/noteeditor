@@ -1,7 +1,14 @@
 import { Link } from '@inertiajs/react';
 import clsx from 'clsx';
 
-export default function SidebarItem({ link, label, collapsed, icon, active }) {
+export default function SidebarItem({
+  link,
+  label,
+  collapsed,
+  icon,
+  active,
+  rightAction,
+}) {
   return (
     <Link
       href={link}
@@ -16,10 +23,12 @@ export default function SidebarItem({ link, label, collapsed, icon, active }) {
       <span
         className={clsx(
           'overflow-hidden whitespace-nowrap transition-all duration-300',
+          'flex w-full',
           collapsed ? 'w-0 opacity-0 ml-0' : 'w-auto opacity-100 ml-3',
         )}
       >
-        {label || 'Sem título'}
+        { label }
+        { rightAction && <div className='ml-auto'>{rightAction}</div> }
       </span>
     </Link>
   )
