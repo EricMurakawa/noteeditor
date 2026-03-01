@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { router, usePage } from '@inertiajs/react'
 import clsx from 'clsx'
 import { useMediaQuery } from '@/Hooks/useMediaQuery'
-import { useNotes } from '@/Contexts/NoteContext'
 import LoadingBar from '@/Components/UI/LoadingBar'
+import { useEditor } from '@/Contexts/EditorContext'
 import SidebarItem from './SidebarItem'
 import { FiEdit } from 'react-icons/fi'
 import { LuNotebookText } from 'react-icons/lu'
@@ -13,13 +13,18 @@ import { AiTwotoneDelete } from 'react-icons/ai'
 export default function Sidebar({onCollapseChange}) {
   const {
     notes,
+    fetchNotes,
     loadingNotes,
     removeNote,
-  } = useNotes()
+  } = useEditor()
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const [collapsed, setCollapsed] = useState(!isDesktop)
   const { url, props } = usePage()
+
+  useEffect(() => {
+    fetchNotes()
+  }, [])
 
   useEffect(() => {
     setCollapsed(!isDesktop)

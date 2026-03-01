@@ -17,7 +17,6 @@ export default function Editor({ note, onChange }) {
   const { inputTitle, setInputTitle, setOriginalTitle } = useEditor()
 
   // TO DO
-  // adicionar titulo
   // scroll paginate na listagem de notas
 
   const theme = {

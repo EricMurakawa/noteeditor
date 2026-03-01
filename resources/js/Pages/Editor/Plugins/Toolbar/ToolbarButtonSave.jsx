@@ -4,17 +4,22 @@ import ToolbarButton from './ToolbarButton'
 import { VscSave } from 'react-icons/vsc'
 import { COMMAND_PRIORITY_LOW, KEY_DOWN_COMMAND } from 'lexical'
 import { router, usePage } from '@inertiajs/react'
-import { useNotes } from '@/Contexts/NoteContext'
 import { useEditor } from '@/Contexts/EditorContext'
 
 export default function ToolbarButtonSave({ style }) {
   const [editor] = useLexicalComposerContext()
   const [isChanged, setIsChanged] = useState(false)
   const { note } = usePage().props;
-  const { addNote, updateNote } = useNotes()
-  const { inputTitle, originalTitle, setOriginalTitle } = useEditor()
   const inputTitleRef = useRef(inputTitle)
   const lastContentRef = useRef(JSON.stringify(editor.getEditorState().toJSON()))
+
+  const {
+    inputTitle,
+    originalTitle,
+    setOriginalTitle,
+    addNote,
+    updateNote
+  } = useEditor()
 
   useEffect(() => {
     inputTitleRef.current = inputTitle
