@@ -6,24 +6,36 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class NoteUpdateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'title'   => ['nullable', 'string', 'max:255'],
+            'title'   => ['required', 'string', 'max:255'],
             'content' => ['required', 'array'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'O :attribute é obrigatório.',
+            'title.string'   => 'O :attribute deve ser um texto válido.',
+            'title.max'      => 'O :attribute não pode ter mais que 255 caracteres.',
+
+            'content.required' => 'O :attribute é obrigatório.',
+            'content.array'    => 'O :attribute deve estar em formato de lista/array.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'title'   => 'título',
+            'content' => 'conteúdo',
         ];
     }
 }

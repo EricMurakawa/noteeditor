@@ -57,7 +57,7 @@ export default function Toolbar() {
   return (
     <div
       className={clsx(
-        'absolute top-0 right-0 left-0 z-100 flex flex-row justify-center items-center flex-wrap gap-[5px] w-full p-2 border-b border-[rgb(209,210,211)] bg-white',
+        'flex flex-row justify-center items-center flex-wrap gap-[5px] w-full p-2 border-b border-[rgb(209,210,211)] bg-white',
         'dark:bg-zinc-900',
       )}
       ref={toolbarRef}

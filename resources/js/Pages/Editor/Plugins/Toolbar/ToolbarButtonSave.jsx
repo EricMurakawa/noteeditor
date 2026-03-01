@@ -5,13 +5,21 @@ import { VscSave } from 'react-icons/vsc'
 import { COMMAND_PRIORITY_LOW, KEY_DOWN_COMMAND } from 'lexical'
 import { router, usePage } from '@inertiajs/react'
 import { useNotes } from '@/Contexts/NoteContext'
+import { useEditor } from '@/Contexts/EditorContext'
 
 export default function ToolbarButtonSave({ style }) {
   const [editor] = useLexicalComposerContext()
   const [isChanged, setIsChanged] = useState(false)
-  const lastContentRef = useRef(JSON.stringify(editor.getEditorState().toJSON()))
   const { note } = usePage().props;
   const { addNote, updateNote } = useNotes()
+  const { inputTitle, originalTitle, setOriginalTitle } = useEditor()
+  const inputTitleRef = useRef(inputTitle)
+  const lastContentRef = useRef(JSON.stringify(editor.getEditorState().toJSON()))
+
+  useEffect(() => {
+    inputTitleRef.current = inputTitle
+    setIsChanged(originalTitle !== inputTitle)
+  }, [inputTitle])
 
   useEffect(() => {
     // Salva com ctrl + s
@@ -51,26 +59,30 @@ export default function ToolbarButtonSave({ style }) {
     try {
       if (note) {
         const { data } = await axios.put(`api/notes/${note.id}`, {
+          title: inputTitleRef.current,
           content: editorState
         });
 
         updateNote(data)
+        setOriginalTitle(data.title)
       } else {
         const {data} = await axios.post(`/api/notes`, {
-          content: editorState
+          title: inputTitleRef.current,
+          content: editorState,
         })
 
         if (data?.id) {
           addNote(data)
+          setOriginalTitle(data.title)
           router.visit(data.id)
         }
       }
 
-      lastContentRef.current = editorState
+      lastContentRef.current = JSON.stringify(editorState)
       setIsChanged(false)
     } catch (error) {
       console.error('Erro ao salvar', error)
-      alert('Erro ao salvar.')
+      alert(error?.response?.data?.message || 'Erro ao salvar.')
     }
   }
 

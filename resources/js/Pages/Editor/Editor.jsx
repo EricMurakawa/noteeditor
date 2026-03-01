@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
@@ -5,14 +7,18 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { HeadingNode } from '@lexical/rich-text'
 import { ListNode, ListItemNode } from '@lexical/list'
+import { useEditor } from '@/Contexts/EditorContext'
 import Toolbar from './Plugins/Toolbar/Toolbar'
-import clsx from 'clsx'
 import ImageNode from './Nodes/ImageNode'
 import Sidebar from './Components/Sidebar'
-import { useState } from 'react'
 
 export default function Editor({ note, onChange }) {
   const [collapsed, setCollapsed] = useState(false)
+  const { inputTitle, setInputTitle, setOriginalTitle } = useEditor()
+
+  // TO DO
+  // adicionar titulo
+  // scroll paginate na listagem de notas
 
   const theme = {
     code: 'editor-code',
@@ -60,8 +66,15 @@ export default function Editor({ note, onChange }) {
       ListItemNode,
       ImageNode,
     ],
-    editorState: note && note.content ? JSON.stringify(note.content) : null,
+    editorState: note && (note?.content?.root?.children || []).length
+      ? JSON.stringify(note.content)
+      : null,
   }
+
+  useEffect(() => {
+    setOriginalTitle(note ? note.title : '')
+    setInputTitle(note ? note.title : '')
+  }, [])
 
   function handleChange(editorState) {
     editorState.read(() => {
@@ -92,13 +105,25 @@ export default function Editor({ note, onChange }) {
             'transition-all duration-300 ease-in-out',
           )}>
             <LexicalComposer initialConfig={config}>
-              <Toolbar />
+              <div className='flex flex-col'>
+                <Toolbar />
+                <input
+                  value={inputTitle}
+                  onChange={(e) => setInputTitle(e.target.value)}
+                  placeholder="Digite o título..."
+                  className={clsx(
+                    'w-full max-w-lg px-4 py-2 border border-gray-300 rounded-lg shadow-sm mt-2 mx-auto',
+                    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+                    'transition duration-200'
+                  )}
+                />
+              </div>
 
               <RichTextPlugin
                 contentEditable={
                   <ContentEditable
                     className={clsx(
-                      'relative min-h-full w-full max-w-[680px] mx-auto px-8 py-[120px]',
+                      'relative min-h-full w-full max-w-[680px] mx-auto px-8 pt-10 pb-[120px]',
                       'outline-none text-base leading-[1.6]',
                     )}
                   />
